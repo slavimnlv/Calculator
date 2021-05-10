@@ -33,15 +33,22 @@ namespace Calculator
             {
                 tbResult.Clear();
             }
-            if (button.Text == ".")
+            if (button.Text == ",")
             {
-                if (!tbResult.Text.Contains("."))
+                if (!tbResult.Text.Contains(","))
                     tbResult.Text += button.Text;
             }else
                 tbResult.Text += button.Text;
-          
-            isOperPerformed = false;
+
+            if(lbEquation.Text == "" && tbResult.Text != "")
+            {
+                lbEquation.Text = tbResult.Text;
+            }
+            else 
             lbEquation.Text +=  button.Text;
+
+            isOperPerformed = false;
+            
         }
 
         private void btnOper_Click(object sender, EventArgs e)
@@ -49,8 +56,13 @@ namespace Calculator
             Button button = (Button)sender;
             performedOper = button.Text;
             isOperPerformed = true;
+            if (lbEquation.Text == "" && tbResult.Text != "")
+            {
+                lbEquation.Text = tbResult.Text;
+            }
+
             lbEquation.Text += " " + performedOper + " ";
-            //try to count the operations and then to extract the operations from list or array;
+
             operatorsUsed.Add(performedOper);
             numbers.Add(double.Parse(tbResult.Text));
             opeCount++;
@@ -77,6 +89,7 @@ namespace Calculator
                     
                 }
                 result = double.Parse(tbResult.Text);
+                
             }
             else
                 result = double.Parse(tbResult.Text);
@@ -119,8 +132,10 @@ namespace Calculator
             {
                 tbResult.Text = (result / Double.Parse(tbResult.Text)).ToString();
             }
+
             lbEquation.Text = "";
             operatorsUsed.Clear();
+            numbers.Clear();
             opeCount = 0;
 
         }
@@ -129,7 +144,8 @@ namespace Calculator
         {
            
             tbResult.Text = tbResult.Text.Remove(tbResult.Text.Length-1, 1);
-            lbEquation.Text = lbEquation.Text.Remove(lbEquation.Text.Length - 1, 1);
+            if(lbEquation.Text!="")
+                lbEquation.Text = lbEquation.Text.Remove(lbEquation.Text.Length - 1, 1);
         }
 
         private void btnMC_Click(object sender, EventArgs e)
@@ -156,7 +172,16 @@ namespace Calculator
 
         private void btnSqrt_Click(object sender, EventArgs e)
         {
-            lbEquation.Text += " " + "sqrt" + " ";
+            if (lbEquation.Text == "")
+            {
+                lbEquation.Text +=  $" √({tbResult.Text}) ";
+            }
+            else
+            {
+                string temp = tbResult.Text;
+                lbEquation.Text = lbEquation.Text.Replace(temp, $" √({tbResult.Text}) ");
+                
+            }
             tbResult.Text = (Math.Sqrt(Double.Parse(tbResult.Text))).ToString();
             
         }
